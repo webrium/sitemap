@@ -1,0 +1,41 @@
+{
+    "name": "webrium/sitemap",
+    "description": "A production-ready PHP library for generating XML sitemaps with support for images, videos, hreflang, gzip compression, and automatic sitemap splitting.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "sitemap",
+        "xml-sitemap",
+        "sitemap-generator",
+        "seo",
+        "php"
+    ],
+    "authors": [
+        {
+            "name": "Webrium",
+            "homepage": "https://github.com/webrium"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-xmlwriter": "*",
+        "ext-zlib": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webrium\\Sitemap\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Webrium\\Sitemap\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable"
+}
