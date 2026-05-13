@@ -67,7 +67,8 @@ class Sitemap
         $this->validateVideos($videos);
         $this->validateHreflangs($hreflangs);
 
-        $loc = $this->baseUrl . '/' . ltrim($path, '/');
+        $trimmedPath = ltrim($path, '/');
+        $loc = $trimmedPath === '' ? $this->baseUrl : $this->baseUrl . '/' . $trimmedPath;
 
         if ($this->isDuplicate($loc)) {
             return $this;
@@ -118,11 +119,24 @@ class Sitemap
         $this->xmlWriter->setIndent(true);
         $this->xmlWriter->setIndentString('  ');
 
+        $hasImages    = (bool) array_filter($this->urls, fn($u) => !empty($u['images']));
+        $hasVideos    = (bool) array_filter($this->urls, fn($u) => !empty($u['videos']));
+        $hasHreflangs = (bool) array_filter($this->urls, fn($u) => !empty($u['hreflangs']));
+
         $this->xmlWriter->startElement('urlset');
-        $this->xmlWriter->writeAttribute('xmlns',       'http://www.sitemaps.org/schemas/sitemap/0.9');
-        $this->xmlWriter->writeAttribute('xmlns:image', 'http://www.google.com/schemas/sitemap-image/1.1');
-        $this->xmlWriter->writeAttribute('xmlns:video', 'http://www.google.com/schemas/sitemap-video/1.1');
-        $this->xmlWriter->writeAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
+        $this->xmlWriter->writeAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+
+        if ($hasImages) {
+            $this->xmlWriter->writeAttribute('xmlns:image', 'http://www.google.com/schemas/sitemap-image/1.1');
+        }
+
+        if ($hasVideos) {
+            $this->xmlWriter->writeAttribute('xmlns:video', 'http://www.google.com/schemas/sitemap-video/1.1');
+        }
+
+        if ($hasHreflangs) {
+            $this->xmlWriter->writeAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
+        }
 
         foreach ($this->urls as $url) {
             $this->writeUrlElement($url);
@@ -341,7 +355,8 @@ class Sitemap
             throw new InvalidArgumentException('Path cannot be empty.');
         }
 
-        $full = $this->baseUrl . '/' . ltrim($path, '/');
+        $trimmedPath = ltrim($path, '/');
+        $full = $trimmedPath === '' ? $this->baseUrl : $this->baseUrl . '/' . $trimmedPath;
 
         if (filter_var($full, FILTER_VALIDATE_URL) === false) {
             throw new InvalidArgumentException("Invalid URL produced from path: {$full}");
