@@ -21,8 +21,9 @@ use Webrium\Sitemap\Sitemap;
 
 $sitemap = new Sitemap('https://example.com');
 
+$sitemap->addUrl('/',      changefreq: Sitemap::FREQ_DAILY,   priority: 1.0); // → https://example.com
 $sitemap->addUrl('/about', changefreq: Sitemap::FREQ_MONTHLY, priority: 0.8);
-$sitemap->addUrl('/blog', changefreq: Sitemap::FREQ_DAILY,   priority: 0.9);
+$sitemap->addUrl('/blog',  changefreq: Sitemap::FREQ_DAILY,   priority: 0.9);
 
 echo $sitemap->generate();
 ```
